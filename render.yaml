@@ -1,0 +1,62 @@
+# Deploy gratuito no Render (Hobby / Free instance types)
+# Dashboard: https://dashboard.render.com/select-repo?type=blueprint
+# Docs: https://render.com/docs/free
+
+databases:
+  - name: devtech-db
+    plan: free
+    databaseName: devpath
+    user: devpath
+    postgresMajorVersion: '16'
+
+services:
+  - type: web
+    name: devtech-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: '3000'
+      - key: DATABASE_URL
+        fromDatabase:
+          name: devtech-db
+          property: connectionString
+      - key: DB_SSL
+        value: 'false'
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: ASSESSMENT_PASS_SCORE
+        value: '70'
+      - key: LLM_PROVIDER
+        value: mock
+      - key: SEED_DATABASE
+        value: 'true'
+      - key: LOG_LEVEL
+        value: info
+
+  - type: web
+    name: devtech-web
+    runtime: static
+    region: oregon
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://devtech-api.onrender.com/api/v1

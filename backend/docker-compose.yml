@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: devpath-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: devpath
+      POSTGRES_PASSWORD: devpath_secret
+      POSTGRES_DB: devpath
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Porta não exposta ao host — app conecta via rede interna
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U devpath -d devpath']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: devpath-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - '3001:3000'
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: devpath
+      DB_PASSWORD: devpath_secret
+      DB_DATABASE: devpath
+      JWT_ACCESS_SECRET: devpath-access-secret-change-me-32chars
+      JWT_REFRESH_SECRET: devpath-refresh-secret-change-me-32chars
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      ASSESSMENT_PASS_SCORE: 70
+      LLM_PROVIDER: groq
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: llama-3.3-70b-versatile
+      SEED_DATABASE: 'true'
+      LOG_LEVEL: info
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
