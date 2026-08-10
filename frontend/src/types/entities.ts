@@ -88,6 +88,7 @@ export interface ProjectSuggestion {
   title: string
   description: string
   difficulty: TechnologyDifficulty
+  technology?: Technology
 }
 
 export interface Competency {
