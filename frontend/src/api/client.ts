@@ -3,7 +3,14 @@ import { tokenStorage } from '@/lib/token-storage'
 import type { ApiResponse } from '@/types/api'
 import type { TokenPair } from '@/types/entities'
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001/api/v1'
+const API_URL = (() => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL
+  if (import.meta.env.VITE_API_HOST) {
+    const host = String(import.meta.env.VITE_API_HOST).replace(/^https?:\/\//, '')
+    return `https://${host}/api/v1`
+  }
+  return 'http://localhost:3001/api/v1'
+})()
 
 export const apiClient = axios.create({
   baseURL: API_URL,

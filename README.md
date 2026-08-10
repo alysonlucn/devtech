@@ -88,9 +88,9 @@ O arquivo `render.yaml` sobe **API + Postgres + frontend** no plano free (sem ca
 3. Conecte o repositório e confirme o Blueprint
 
 Após o deploy:
-- Frontend: `https://devtech-web.onrender.com`
-- API: `https://devtech-api.onrender.com/api/v1`
-- Swagger: `https://devtech-api.onrender.com/api/docs`
+- Frontend: `https://devpath-alysonlucn-web.onrender.com`
+- API: `https://devpath-alysonlucn-api.onrender.com/api/v1`
+- Swagger: `https://devpath-alysonlucn-api.onrender.com/api/docs`
 
 **Limitações do free:** a API “dorme” após ~15 min sem uso (primeiro acesso pode demorar ~1 min). O Postgres free expira em 30 dias — suficiente para apresentação em aula.
 
