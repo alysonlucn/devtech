@@ -47,21 +47,18 @@ services:
       - key: LOG_LEVEL
         value: info
 
+  # Web service (não static site): o publish estático no Render estava
+  # servindo o HTML sem os assets (/assets/*.js → 404 → tela branca).
   - type: web
     name: devpath-alysonlucn-web
-    runtime: static
+    runtime: node
+    plan: free
+    region: oregon
     rootDir: frontend
     buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    startCommand: npm run start
     envVars:
-      - key: VITE_API_HOST
-        fromService:
-          name: devpath-alysonlucn-api
-          type: web
-          property: host
+      - key: NODE_VERSION
+        value: '22'
       - key: VITE_API_URL
         value: https://devpath-alysonlucn-api.onrender.com/api/v1
