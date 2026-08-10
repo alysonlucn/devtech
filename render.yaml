@@ -49,7 +49,6 @@ services:
   - type: web
     name: devtech-web
     runtime: static
-    region: oregon
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
