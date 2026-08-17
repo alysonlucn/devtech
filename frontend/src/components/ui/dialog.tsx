@@ -11,7 +11,7 @@ export const DialogClose = DialogPrimitive.Close
 export function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
   return (
     <DialogPrimitive.Overlay
-      className={cn('fixed inset-0 z-50 bg-black/50', className)}
+      className={cn('fixed inset-0 z-50 bg-[var(--color-overlay)] backdrop-blur-[2px]', className)}
       {...props}
     />
   )

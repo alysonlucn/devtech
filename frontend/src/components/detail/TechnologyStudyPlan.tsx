@@ -234,11 +234,11 @@ export function TechnologyStudyPlan({
                 className={cn(
                   'flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold',
                   doneFlags[stage.id]
-                    ? 'bg-[var(--color-success)] text-white'
+                    ? 'bg-[var(--color-success)] text-[var(--color-primary-foreground)]'
                     : isLocked
                       ? 'bg-[var(--color-border)] text-[var(--color-muted-foreground)]'
                       : isActive
-                        ? 'bg-[var(--color-primary)] text-white'
+                        ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
                         : 'bg-[var(--color-border)] text-[var(--color-muted-foreground)]',
                 )}
               >
@@ -300,7 +300,7 @@ export function TechnologyStudyPlan({
                             className={cn(
                               'inline-flex h-5 w-5 items-center justify-center rounded-full border text-[10px] font-bold',
                               opened
-                                ? 'border-[var(--color-success)] bg-[var(--color-success)] text-white'
+                                ? 'border-[var(--color-success)] bg-[var(--color-success)] text-[var(--color-primary-foreground)]'
                                 : 'border-[var(--color-border)] text-[var(--color-muted-foreground)]',
                             )}
                           >

@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { AppShell } from '@/components/layout/AppShell'
 import { appSidebarSections } from '@/components/layout/Sidebar'
 import { PageHeader } from '@/components/shared/PageHeader'
+import { FormError } from '@/components/shared/FormError'
 import { getApiErrorMessage } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { JobAnalysisResult, Technology } from '@/types/entities'
@@ -50,14 +51,14 @@ function MatchRing({ percentage }: { percentage: number }) {
       ? 'var(--color-success)'
       : percentage >= 40
         ? 'var(--color-warning)'
-        : 'oklch(0.55 0.2 25)'
+        : 'var(--color-destructive)'
 
   const textColor =
     percentage >= 70
       ? 'text-[var(--color-success)]'
       : percentage >= 40
         ? 'text-[var(--color-warning)]'
-        : 'text-red-600'
+        : 'text-[var(--color-destructive)]'
 
   return (
     <div className="flex flex-col items-center">
@@ -133,7 +134,7 @@ export function JobAnalysisPage() {
   }
 
   return (
-    <AppShell sidebarSections={appSidebarSections} title="Área do aluno">
+    <AppShell sidebarSections={appSidebarSections}>
       <PageHeader
         title="Análise de vaga"
         description="Cole a descrição de uma vaga e veja seu nível de compatibilidade."
@@ -157,7 +158,7 @@ export function JobAnalysisPage() {
                 {...register('jobDescription')}
               />
               {errors.jobDescription && (
-                <p className="text-sm text-red-600">{errors.jobDescription.message}</p>
+                <FormError>{errors.jobDescription.message}</FormError>
               )}
             </div>
             <Button type="submit" disabled={mutation.isPending}>
@@ -228,9 +229,9 @@ export function JobAnalysisPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-red-200">
+            <Card className="border-[var(--color-destructive)]/25">
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base text-red-800">
+                <CardTitle className="flex items-center gap-2 text-base text-[var(--color-destructive-foreground)]">
                   <XCircle className="h-5 w-5" />
                   Tecnologias faltantes
                 </CardTitle>
@@ -244,8 +245,8 @@ export function JobAnalysisPage() {
                       const tech = findTechByName(techList, name)
                       return (
                         <li key={name} className="flex flex-wrap items-center justify-between gap-2 text-sm">
-                          <span className="flex items-center gap-2 text-red-800">
-                            <XCircle className="h-4 w-4 shrink-0 text-red-500" />
+                          <span className="flex items-center gap-2 text-[var(--color-destructive-foreground)]">
+                            <XCircle className="h-4 w-4 shrink-0 text-[var(--color-destructive)]" />
                             {name}
                           </span>
                           {tech ? (

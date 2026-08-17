@@ -28,7 +28,7 @@ export function TechnologyListCard({
     <Link to={to} className={cn('block', className)}>
       <Card className="group transition-all hover:border-[var(--color-primary)]/30 hover:shadow-md">
         <CardContent className="flex items-center gap-4 p-5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-sm font-bold text-white">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-sm font-bold text-[var(--color-primary-foreground)]">
             {order}
           </span>
           <div className="min-w-0 flex-1">

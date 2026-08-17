@@ -28,6 +28,7 @@ import { ConfirmDialog } from '@/components/shared/ConfirmDialog'
 import { DifficultyBadge } from '@/components/shared/DifficultyBadge'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { PageHeader } from '@/components/shared/PageHeader'
+import { FormError } from '@/components/shared/FormError'
 import { categoryOptions, difficultyOptions } from '@/lib/labels'
 import { getApiErrorMessage } from '@/lib/utils'
 import type { Technology } from '@/types/entities'
@@ -131,7 +132,7 @@ export function AdminTechnologiesPage() {
   }
 
   return (
-    <AppShell sidebarLinks={adminSidebarLinks} title="Administração">
+    <AppShell sidebarLinks={adminSidebarLinks}>
       <PageHeader
         title="Tecnologias"
         description="Gerencie o catálogo de tecnologias."
@@ -161,7 +162,7 @@ export function AdminTechnologiesPage() {
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => setDeleteId(tech.id)}>
-                    <Trash2 className="h-4 w-4 text-red-600" />
+                    <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                   </Button>
                 </div>
               </CardContent>
@@ -178,7 +179,7 @@ export function AdminTechnologiesPage() {
               <div className="space-y-2">
                 <Label>Nome</Label>
                 <Input {...register('name')} />
-                {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
+                <FormError>{errors.name?.message}</FormError>
               </div>
               <div className="space-y-2">
                 <Label>Identificador na URL (opcional)</Label>

@@ -68,7 +68,7 @@ export function MobileNav() {
               to={to}
               className={({ isActive }) =>
                 cn(
-                  'flex flex-1 flex-col items-center gap-1 px-1 py-3 text-[0.65rem] font-medium transition-colors sm:text-xs',
+                  'flex flex-1 flex-col items-center gap-1 px-1 py-3 text-[0.7rem] font-medium transition-colors sm:text-xs',
                   isActive
                     ? 'text-[var(--color-primary)]'
                     : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]',
@@ -84,7 +84,7 @@ export function MobileNav() {
             type="button"
             onClick={() => setMoreOpen(true)}
             className={cn(
-              'flex flex-1 flex-col items-center gap-1 px-1 py-3 text-[0.65rem] font-medium transition-colors sm:text-xs',
+              'flex flex-1 flex-col items-center gap-1 px-1 py-3 text-[0.7rem] font-medium transition-colors sm:text-xs',
               moreActive
                 ? 'text-[var(--color-primary)]'
                 : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]',
@@ -99,7 +99,7 @@ export function MobileNav() {
 
       <Dialog open={moreOpen} onOpenChange={setMoreOpen}>
         <DialogContent
-          className="fixed inset-x-0 bottom-0 top-auto left-1/2 z-50 flex w-full max-w-lg -translate-x-1/2 translate-y-0 flex-col gap-0 rounded-t-2xl rounded-b-none border border-[var(--color-border)] border-b-0 p-0 shadow-xl data-[state=open]:animate-none"
+          className="fixed inset-x-0 bottom-0 top-auto left-1/2 z-50 flex w-full max-w-lg -translate-x-1/2 translate-y-0 flex-col gap-0 rounded-t-2xl rounded-b-none border border-[var(--color-border)] border-b-0 p-0 shadow-xl data-[state=open]:slide-in-from-bottom-4"
           aria-describedby={undefined}
         >
           <DialogHeader className="border-b border-[var(--color-border)] p-4 text-left">

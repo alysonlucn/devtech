@@ -92,10 +92,10 @@ export function OnboardingPage() {
 
         {step === 0 && (
           <div className="text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-[oklch(0.4_0.1_195)] text-white shadow-lg">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-deep)] text-[var(--color-primary-foreground)] shadow-lg">
               <Sparkles className="h-8 w-8" />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h1 className="page-title sm:text-4xl">
               Bem-vindo, {user?.name?.split(' ')[0]}!
             </h1>
             <p className="mx-auto mt-4 max-w-lg text-[var(--color-muted-foreground)]">
@@ -127,7 +127,7 @@ export function OnboardingPage() {
         {step === 1 && (
           <div>
             <div className="mb-8 text-center">
-              <h1 className="text-3xl font-bold">Qual trilha combina com você?</h1>
+              <h1 className="page-title">Qual trilha combina com você?</h1>
               <p className="mt-2 text-[var(--color-muted-foreground)]">
                 Toque ou clique para selecionar o caminho da sua carreira.
               </p>
@@ -188,7 +188,7 @@ export function OnboardingPage() {
                             className={cn(
                               'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300',
                               isSelected
-                                ? 'scale-100 border-[var(--color-primary)] bg-[var(--color-primary)] text-white'
+                                ? 'scale-100 border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
                                 : 'scale-90 border-[var(--color-border)] text-transparent group-hover:scale-100 group-hover:border-[var(--color-primary)]/50 group-hover:bg-[var(--color-primary)]/10 group-hover:text-[var(--color-primary)]',
                             )}
                           >
@@ -218,9 +218,9 @@ export function OnboardingPage() {
 
         {step === 2 && (
           <Card className="overflow-hidden border-0 text-center shadow-lg">
-            <div className="h-2 bg-gradient-to-r from-[var(--color-primary)] via-[oklch(0.55_0.1_195)] to-[var(--color-xp)]" />
+            <div className="h-2 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)] to-[var(--color-xp)]" />
             <CardHeader className="pb-2 pt-10">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-success)]/15 text-[var(--color-success)]">
                 <Check className="h-8 w-8" />
               </div>
               <CardTitle className="text-2xl">Tudo pronto!</CardTitle>

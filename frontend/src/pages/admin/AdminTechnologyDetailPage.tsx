@@ -138,7 +138,7 @@ export function AdminTechnologyDetailPage() {
   }
 
   return (
-    <AppShell sidebarLinks={adminSidebarLinks} title="Administração">
+    <AppShell sidebarLinks={adminSidebarLinks}>
       <Link to="/admin/tecnologias" className="text-sm text-[var(--color-primary)] hover:underline">← Voltar</Link>
       <h1 className="mt-4 text-2xl font-bold">{tech.name}</h1>
 
@@ -157,7 +157,7 @@ export function AdminTechnologyDetailPage() {
               <CardContent className="flex items-center justify-between py-3">
                 <div><p className="font-medium">{r.title}</p><p className="text-sm text-[var(--color-muted-foreground)]">{r.url}</p></div>
                 <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'resource', id: r.id })}>
-                  <Trash2 className="h-4 w-4 text-red-600" />
+                  <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                 </Button>
               </CardContent>
             </Card>
@@ -171,7 +171,7 @@ export function AdminTechnologyDetailPage() {
               <CardContent className="flex items-center justify-between py-3">
                 <div><p className="font-medium">{p.title}</p><p className="text-sm">{p.description}</p></div>
                 <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'project', id: p.id })}>
-                  <Trash2 className="h-4 w-4 text-red-600" />
+                  <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                 </Button>
               </CardContent>
             </Card>
@@ -185,7 +185,7 @@ export function AdminTechnologyDetailPage() {
               <CardContent className="flex items-center justify-between py-3">
                 <p>{c.title}</p>
                 <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'competency', id: c.id })}>
-                  <Trash2 className="h-4 w-4 text-red-600" />
+                  <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                 </Button>
               </CardContent>
             </Card>
@@ -199,7 +199,7 @@ export function AdminTechnologyDetailPage() {
               <CardContent className="flex items-center justify-between py-3">
                 <p>{d.prerequisiteTechnology?.name ?? d.prerequisiteTechnologyId}</p>
                 <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'dependency', id: d.prerequisiteTechnologyId })}>
-                  <Trash2 className="h-4 w-4 text-red-600" />
+                  <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                 </Button>
               </CardContent>
             </Card>

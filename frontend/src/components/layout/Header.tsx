@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { ThemeToggle } from '@/components/shared/ThemeToggle'
 import { useAuth } from '@/context/AuthContext'
 import { cn } from '@/lib/utils'
 
@@ -51,6 +52,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 sm:flex">
+          <ThemeToggle />
           {isAuthenticated ? (
             <>
               <Button variant="ghost" size="sm" asChild>
@@ -74,15 +76,17 @@ export function Header() {
           )}
         </div>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="sm:hidden"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Abrir menu"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-1 sm:hidden">
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Abrir menu"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
 
       <Dialog open={menuOpen} onOpenChange={setMenuOpen}>

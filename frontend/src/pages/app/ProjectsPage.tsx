@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { userApi } from '@/api/user.api'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -14,6 +15,12 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import { projectStatusLabels } from '@/lib/labels'
 import { getApiErrorMessage } from '@/lib/utils'
 import { ProjectStatus } from '@/types/enums'
+
+const projectStatusVariant: Record<ProjectStatus, 'secondary' | 'warning' | 'success'> = {
+  NOT_STARTED: 'secondary',
+  IN_PROGRESS: 'warning',
+  FINISHED: 'success',
+}
 
 export function ProjectsPage() {
   const queryClient = useQueryClient()
@@ -35,7 +42,7 @@ export function ProjectsPage() {
   })
 
   return (
-    <AppShell sidebarSections={appSidebarSections} title="Área do aluno">
+    <AppShell sidebarSections={appSidebarSections}>
       <PageHeader title="Meus projetos" description="Projetos práticos vinculados às tecnologias." />
 
       {isLoading && (
@@ -70,9 +77,14 @@ export function ProjectsPage() {
                       .find((line) => line.trim() && !line.startsWith('#')) ?? item.project.description}
                   </p>
                 )}
-                {item.project?.difficulty && (
-                  <DifficultyBadge difficulty={item.project.difficulty} />
-                )}
+                <div className="flex flex-wrap items-center gap-2">
+                  {item.project?.difficulty && (
+                    <DifficultyBadge difficulty={item.project.difficulty} />
+                  )}
+                  <Badge variant={projectStatusVariant[item.status]}>
+                    {projectStatusLabels[item.status]}
+                  </Badge>
+                </div>
                 <div className="flex flex-wrap items-center gap-3">
                   {item.project && (
                     <Button size="sm" variant="outline" asChild>

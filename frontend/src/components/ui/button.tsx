@@ -8,17 +8,21 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90',
-        secondary: 'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] hover:opacity-90',
-        outline: 'border border-[var(--color-border)] bg-transparent hover:bg-[var(--color-accent)]',
-        ghost: 'hover:bg-[var(--color-accent)]',
-        destructive: 'bg-[var(--color-destructive)] text-[var(--color-destructive-foreground)] hover:opacity-90',
+        default:
+          'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary-deep)]',
+        secondary:
+          'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] hover:bg-[var(--color-accent)]',
+        outline:
+          'border border-[var(--color-border)] bg-[var(--color-card)] hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)]',
+        ghost: 'hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)]',
+        destructive:
+          'bg-[var(--color-destructive)] text-[var(--color-primary-foreground)] hover:opacity-90',
         link: 'text-[var(--color-primary)] underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',
         sm: 'h-8 rounded-md px-3 text-xs',
-        lg: 'h-11 rounded-md px-8',
+        lg: 'h-11 rounded-md px-6 sm:px-8',
         icon: 'h-10 w-10',
       },
     },

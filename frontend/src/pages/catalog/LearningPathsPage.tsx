@@ -5,6 +5,7 @@ import { ArrowRight, Clock, Layers, Search } from 'lucide-react'
 import { learningPathsApi } from '@/api/learning-paths.api'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PublicLayout } from '@/components/layout/AppShell'
 import { EmptyState } from '@/components/shared/EmptyState'
@@ -67,7 +68,7 @@ function LearningPathCard({
   const nav = getTrailNavigation(path.id, isAuthenticated)
 
   return (
-    <Link to={nav.to} state={nav.state} className="group block focus-visible:outline-none">
+    <Link to={nav.to} state={nav.state} className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]">
       <Card className="path-card h-full overflow-hidden">
         <div className={cn('h-2 bg-gradient-to-r transition-all duration-300 group-hover:h-3', getPathGradient(index))} />
         <CardHeader>
@@ -159,28 +160,28 @@ export function LearningPathsPage() {
                 aria-label="Buscar trilhas"
               />
             </div>
-            <select
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value as DifficultyFilter)}
-              className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-card)] px-3 text-sm"
-              aria-label="Filtrar por dificuldade"
-            >
-              <option value="all">Todas as dificuldades</option>
-              <option value={TechnologyDifficulty.BEGINNER}>{difficultyLabels.BEGINNER}</option>
-              <option value={TechnologyDifficulty.INTERMEDIATE}>{difficultyLabels.INTERMEDIATE}</option>
-              <option value={TechnologyDifficulty.ADVANCED}>{difficultyLabels.ADVANCED}</option>
-            </select>
-            <select
-              value={duration}
-              onChange={(e) => setDuration(e.target.value as DurationBucket)}
-              className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-card)] px-3 text-sm"
-              aria-label="Filtrar por duração"
-            >
-              <option value="all">Qualquer duração</option>
-              <option value="short">&lt; 20h</option>
-              <option value="medium">20–40h</option>
-              <option value="long">&gt; 40h</option>
-            </select>
+            <Select value={difficulty} onValueChange={(v) => setDifficulty(v as DifficultyFilter)}>
+              <SelectTrigger className="w-full sm:w-[200px]" aria-label="Filtrar por dificuldade">
+                <SelectValue placeholder="Dificuldade" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as dificuldades</SelectItem>
+                <SelectItem value={TechnologyDifficulty.BEGINNER}>{difficultyLabels.BEGINNER}</SelectItem>
+                <SelectItem value={TechnologyDifficulty.INTERMEDIATE}>{difficultyLabels.INTERMEDIATE}</SelectItem>
+                <SelectItem value={TechnologyDifficulty.ADVANCED}>{difficultyLabels.ADVANCED}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={duration} onValueChange={(v) => setDuration(v as DurationBucket)}>
+              <SelectTrigger className="w-full sm:w-[180px]" aria-label="Filtrar por duração">
+                <SelectValue placeholder="Duração" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Qualquer duração</SelectItem>
+                <SelectItem value="short">&lt; 20h</SelectItem>
+                <SelectItem value="medium">20–40h</SelectItem>
+                <SelectItem value="long">&gt; 40h</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         )}
 

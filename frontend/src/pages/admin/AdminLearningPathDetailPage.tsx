@@ -67,7 +67,7 @@ export function AdminLearningPathDetailPage() {
   const availableTechs = allTechQuery.data?.data.filter((t) => !linkedIds.has(t.id)) ?? []
 
   return (
-    <AppShell sidebarLinks={adminSidebarLinks} title="Administração">
+    <AppShell sidebarLinks={adminSidebarLinks}>
       <Link to="/admin/trilhas" className="text-sm text-[var(--color-primary)] hover:underline">← Voltar</Link>
       <h1 className="mt-4 text-2xl font-bold">{path?.title}</h1>
 
@@ -106,7 +106,7 @@ export function AdminLearningPathDetailPage() {
                 <span>{item.technology?.name ?? item.technologyId}</span>
               </div>
               <Button variant="ghost" size="icon" onClick={() => setRemoveTechId(item.technologyId)}>
-                <Trash2 className="h-4 w-4 text-red-600" />
+                <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
               </Button>
             </CardContent>
           </Card>

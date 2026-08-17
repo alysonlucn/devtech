@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { AppShell } from '@/components/layout/AppShell'
 import { appSidebarSections } from '@/components/layout/Sidebar'
+import { FormError } from '@/components/shared/FormError'
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner'
 import { TechnologyAvatar } from '@/components/shared/TechnologyAvatar'
 import { getApiErrorMessage } from '@/lib/utils'
@@ -92,7 +93,7 @@ export function AssessmentPage() {
   const isEvaluating = isSubmitting || mutation.isPending
 
   return (
-    <AppShell sidebarSections={appSidebarSections} title="Área do aluno">
+    <AppShell sidebarSections={appSidebarSections}>
       <Link to={`/tecnologias/${technologyId}`} className="text-sm font-medium text-[var(--color-primary)] hover:underline">
         ← Voltar à tecnologia
       </Link>
@@ -148,7 +149,7 @@ export function AssessmentPage() {
                   />
                   <div className="flex items-center justify-between gap-2">
                     {errors.answers?.[index]?.answer ? (
-                      <p className="text-sm text-red-600">{errors.answers[index]?.answer?.message}</p>
+                      <FormError>{errors.answers[index]?.answer?.message}</FormError>
                     ) : (
                       <span className="text-xs text-[var(--color-muted-foreground)]">
                         Mínimo {MIN_ANSWER} caracteres
@@ -170,7 +171,7 @@ export function AssessmentPage() {
         })}
 
         {errors.answers?.root && (
-          <p className="text-sm text-red-600">{errors.answers.root.message}</p>
+          <FormError>{errors.answers.root.message}</FormError>
         )}
 
         <Button type="submit" size="lg" disabled={isEvaluating}>

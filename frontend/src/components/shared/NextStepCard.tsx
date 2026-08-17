@@ -23,10 +23,10 @@ export function NextStepCard({
   variant = 'default',
 }: NextStepCardProps) {
   return (
-    <Card className="overflow-hidden border-0 bg-gradient-to-br from-[var(--color-primary)] to-[color-mix(in_oklch,var(--color-primary)_55%,black)] text-white shadow-lg">
+    <Card className="overflow-hidden border-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-deep)] text-[var(--color-primary-foreground)] shadow-lg">
       <CardContent className="relative p-6 sm:p-8">
-        <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
-        <div className="absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-white/5 blur-xl" />
+        <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-[var(--color-primary-foreground)]/10 blur-2xl" />
+        <div className="absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-[var(--color-primary-foreground)]/5 blur-xl" />
 
         <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-4">
@@ -36,25 +36,27 @@ export function NextStepCard({
                 slug={technology.slug}
                 category={technology.category}
                 size="lg"
-                className="ring-white/30"
+                className="ring-[var(--color-primary-foreground)]/30"
               />
             ) : (
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/20">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-foreground)]/20">
                 <Sparkles className="h-7 w-7" />
               </div>
             )}
             <div>
-              <p className="text-sm font-medium text-white/80">
+              <p className="text-sm font-medium text-[var(--color-primary-foreground)]/80">
                 {variant === 'onboarding' ? 'Primeiro passo' : 'Seu próximo passo'}
               </p>
               <h2 className="mt-1 text-xl font-bold sm:text-2xl">{title}</h2>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/85">{description}</p>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--color-primary-foreground)]/85">
+                {description}
+              </p>
             </div>
           </div>
           <Button
             size="lg"
             variant="secondary"
-            className="shrink-0 bg-white text-[var(--color-primary)] hover:bg-white/90"
+            className="shrink-0 bg-[var(--color-primary-foreground)] text-[var(--color-primary)] hover:bg-[var(--color-primary-foreground)]/90"
             asChild
           >
             <Link to={actionTo}>

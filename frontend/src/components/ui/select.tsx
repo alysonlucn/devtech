@@ -11,7 +11,7 @@ export function SelectTrigger({ className, children, ...props }: React.Component
   return (
     <SelectPrimitive.Trigger
       className={cn(
-        'flex h-10 w-full items-center justify-between rounded-md border border-[var(--color-input)] bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-10 w-full items-center justify-between rounded-md border border-[var(--color-input)] bg-[var(--color-card)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}

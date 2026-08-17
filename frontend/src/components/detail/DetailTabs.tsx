@@ -40,7 +40,7 @@ export function DetailTabs({ tabs, defaultValue, className }: DetailTabsProps) {
             <span
               className={cn(
                 'rounded-full bg-black/10 px-2 py-0.5 text-xs font-semibold tabular-nums',
-                'group-data-[state=active]:bg-white/20',
+                'group-data-[state=active]:bg-[var(--color-primary-foreground)]/20',
               )}
             >
               {count}

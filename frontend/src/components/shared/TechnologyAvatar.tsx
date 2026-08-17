@@ -23,7 +23,7 @@ export function TechnologyAvatar({ name, slug, category, size = 'md', className 
   return (
     <div
       className={cn(
-        'flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-bold text-white shadow-sm ring-2',
+        'flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-bold text-[var(--color-primary-foreground)] shadow-sm ring-2',
         visual.gradient,
         visual.ring,
         sizeClasses[size],

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Flame, Hand, Star, Trophy, TrendingUp, Zap } from 'lucide-react'
+import { Flame, Hand, Star, Trophy, TrendingUp, Zap, CheckCircle2 } from 'lucide-react'
 import { userApi } from '@/api/user.api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -65,9 +65,9 @@ export function DashboardPage() {
   const nextStep = data ? resolveNextStep(data) : null
 
   return (
-    <AppShell sidebarSections={appSidebarSections} title="Área do aluno">
+    <AppShell sidebarSections={appSidebarSections}>
       <div className="mb-8">
-        <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
+        <h1 className="page-title flex items-center gap-2">
           Olá, {user?.name?.split(' ')[0] ?? 'dev'}!
           <Hand className="h-7 w-7 text-[var(--color-primary)]" aria-hidden />
         </h1>
@@ -99,8 +99,9 @@ export function DashboardPage() {
               value={`Nv. ${levelInfo?.level}`}
               subtitle={levelInfo?.title}
               icon={Zap}
-              iconClassName="text-amber-600"
+              iconClassName="text-[var(--color-xp-foreground)]"
               progress={levelInfo?.progressToNext}
+              progressVariant="xp"
               highlight
             />
             <StatCard
@@ -108,14 +109,14 @@ export function DashboardPage() {
               value={data.xp}
               subtitle={`${levelInfo?.xpForNextLevel ?? 0} XP para o próximo nível`}
               icon={Star}
-              iconClassName="text-amber-500"
+              iconClassName="text-[var(--color-xp-foreground)]"
             />
             <StatCard
               label="Sequência"
               value={`${data.currentStreak} dias`}
               subtitle={getStreakMessage(data.currentStreak)}
               icon={Flame}
-              iconClassName="text-orange-500"
+              iconClassName="text-[var(--color-warning-foreground)]"
             />
             <StatCard
               label="Progresso na trilha"
@@ -131,7 +132,7 @@ export function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-base">Concluídas</CardTitle>
-                <Trophy className="h-4 w-4 text-yellow-500" />
+                <Trophy className="h-4 w-4 text-[var(--color-xp)]" />
               </CardHeader>
               <CardContent className="space-y-3">
                 {data.completedTechnologies.length === 0 ? (
@@ -172,7 +173,7 @@ export function DashboardPage() {
                   <ul className="space-y-2">
                     {data.competencies.slice(0, 8).map((c) => (
                       <li key={c} className="flex items-center gap-2 text-sm">
-                        <span className="text-emerald-500">✓</span> {c}
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--color-success)]" /> {c}
                       </li>
                     ))}
                   </ul>

@@ -1,9 +1,21 @@
 import { NavLink } from 'react-router-dom'
+import {
+  Briefcase,
+  ClipboardCheck,
+  FolderKanban,
+  LayoutDashboard,
+  Map,
+  Sparkles,
+  TrendingUp,
+  User,
+  type LucideIcon,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export interface SidebarLink {
   to: string
   label: string
+  icon?: LucideIcon
 }
 
 export interface SidebarSection {
@@ -28,20 +40,24 @@ export function Sidebar({ links, sections }: SidebarProps) {
               {section.title}
             </p>
             <div className="space-y-0.5">
-              {section.links.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }) =>
-                    cn(
-                      'block rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-accent)]',
-                      isActive && 'bg-[var(--color-accent)] text-[var(--color-primary)]',
-                    )
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
+              {section.links.map((link) => {
+                const Icon = link.icon
+                return (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    className={({ isActive }) =>
+                      cn(
+                        'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-accent)]',
+                        isActive && 'bg-[var(--color-accent)] text-[var(--color-primary)]',
+                      )
+                    }
+                  >
+                    {Icon && <Icon className="h-4 w-4 shrink-0" />}
+                    {link.label}
+                  </NavLink>
+                )
+              })}
             </div>
           </div>
         ))}
@@ -54,23 +70,23 @@ export const appSidebarSections: SidebarSection[] = [
   {
     title: 'Aprender',
     links: [
-      { to: '/app/dashboard', label: 'Painel' },
-      { to: '/app/trilha', label: 'Minha trilha' },
-      { to: '/app/progresso', label: 'Progresso' },
-      { to: '/app/projetos', label: 'Projetos' },
+      { to: '/app/dashboard', label: 'Painel', icon: LayoutDashboard },
+      { to: '/app/trilha', label: 'Minha trilha', icon: Map },
+      { to: '/app/progresso', label: 'Progresso', icon: TrendingUp },
+      { to: '/app/projetos', label: 'Projetos', icon: FolderKanban },
     ],
   },
   {
     title: 'Ferramentas IA',
     links: [
-      { to: '/app/recomendacoes', label: 'Recomendações' },
-      { to: '/app/analise-vaga', label: 'Análise de vaga' },
-      { to: '/app/avaliacoes', label: 'Avaliações' },
+      { to: '/app/recomendacoes', label: 'Recomendações', icon: Sparkles },
+      { to: '/app/analise-vaga', label: 'Análise de vaga', icon: Briefcase },
+      { to: '/app/avaliacoes', label: 'Avaliações', icon: ClipboardCheck },
     ],
   },
   {
     title: 'Conta',
-    links: [{ to: '/app/perfil', label: 'Perfil' }],
+    links: [{ to: '/app/perfil', label: 'Perfil', icon: User }],
   },
 ]
 
@@ -78,6 +94,6 @@ export const appSidebarSections: SidebarSection[] = [
 export const appSidebarLinks: SidebarLink[] = appSidebarSections.flatMap((s) => s.links)
 
 export const adminSidebarLinks: SidebarLink[] = [
-  { to: '/admin/trilhas', label: 'Trilhas' },
-  { to: '/admin/tecnologias', label: 'Tecnologias' },
+  { to: '/admin/trilhas', label: 'Trilhas', icon: Map },
+  { to: '/admin/tecnologias', label: 'Tecnologias', icon: Sparkles },
 ]

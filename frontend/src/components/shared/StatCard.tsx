@@ -10,6 +10,7 @@ interface StatCardProps {
   iconClassName?: string
   subtitle?: string
   progress?: number
+  progressVariant?: 'default' | 'xp' | 'success'
   highlight?: boolean
   className?: string
 }
@@ -21,6 +22,7 @@ export function StatCard({
   iconClassName,
   subtitle,
   progress,
+  progressVariant = 'default',
   highlight,
   className,
 }: StatCardProps) {
@@ -46,7 +48,7 @@ export function StatCard({
           </div>
         </div>
         {progress !== undefined && (
-          <Progress value={progress} className="mt-3 h-2" />
+          <Progress value={progress} variant={progressVariant} className="mt-3 h-2" />
         )}
       </CardContent>
     </Card>

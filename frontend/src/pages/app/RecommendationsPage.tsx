@@ -34,7 +34,7 @@ export function RecommendationsPage() {
   const techList = technologies?.data
 
   return (
-    <AppShell sidebarSections={appSidebarSections} title="Área do aluno">
+    <AppShell sidebarSections={appSidebarSections}>
       <PageHeader
         title="Recomendações"
         description="Sugestões personalizadas geradas por IA com base no seu progresso."

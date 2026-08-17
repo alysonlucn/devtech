@@ -7,45 +7,45 @@ interface TechVisual {
 }
 
 const SLUG_VISUALS: Record<string, TechVisual> = {
-  javascript: { emoji: 'JS', gradient: 'from-yellow-400 to-amber-500', ring: 'ring-yellow-200' },
-  typescript: { emoji: 'TS', gradient: 'from-blue-500 to-blue-700', ring: 'ring-blue-200' },
-  html: { emoji: 'HTML', gradient: 'from-orange-500 to-red-500', ring: 'ring-orange-200' },
-  css: { emoji: 'CSS', gradient: 'from-blue-400 to-indigo-500', ring: 'ring-blue-200' },
-  react: { emoji: '⚛', gradient: 'from-cyan-400 to-blue-500', ring: 'ring-cyan-200' },
-  nodejs: { emoji: 'Node', gradient: 'from-green-500 to-emerald-600', ring: 'ring-green-200' },
-  'node-js': { emoji: 'Node', gradient: 'from-green-500 to-emerald-600', ring: 'ring-green-200' },
-  python: { emoji: 'Py', gradient: 'from-blue-500 to-yellow-400', ring: 'ring-blue-200' },
-  docker: { emoji: '🐳', gradient: 'from-sky-400 to-blue-600', ring: 'ring-sky-200' },
-  git: { emoji: 'Git', gradient: 'from-orange-500 to-red-600', ring: 'ring-orange-200' },
-  sql: { emoji: 'SQL', gradient: 'from-indigo-500 to-purple-600', ring: 'ring-indigo-200' },
-  postgres: { emoji: 'PG', gradient: 'from-blue-600 to-indigo-700', ring: 'ring-blue-200' },
-  mongodb: { emoji: 'Mongo', gradient: 'from-green-500 to-emerald-700', ring: 'ring-green-200' },
-  aws: { emoji: 'AWS', gradient: 'from-orange-400 to-amber-600', ring: 'ring-orange-200' },
-  linux: { emoji: '🐧', gradient: 'from-slate-600 to-slate-800', ring: 'ring-slate-200' },
+  javascript: { emoji: 'JS', gradient: 'from-cyan-600 to-teal-700', ring: 'ring-cyan-200 dark:ring-cyan-900' },
+  typescript: { emoji: 'TS', gradient: 'from-blue-600 to-indigo-700', ring: 'ring-blue-200 dark:ring-blue-900' },
+  html: { emoji: 'HTML', gradient: 'from-sky-600 to-cyan-700', ring: 'ring-sky-200 dark:ring-sky-900' },
+  css: { emoji: 'CSS', gradient: 'from-indigo-500 to-blue-700', ring: 'ring-indigo-200 dark:ring-indigo-900' },
+  react: { emoji: 'Re', gradient: 'from-cyan-500 to-blue-600', ring: 'ring-cyan-200 dark:ring-cyan-900' },
+  nodejs: { emoji: 'Node', gradient: 'from-teal-600 to-emerald-700', ring: 'ring-teal-200 dark:ring-teal-900' },
+  'node-js': { emoji: 'Node', gradient: 'from-teal-600 to-emerald-700', ring: 'ring-teal-200 dark:ring-teal-900' },
+  python: { emoji: 'Py', gradient: 'from-blue-600 to-cyan-600', ring: 'ring-blue-200 dark:ring-blue-900' },
+  docker: { emoji: 'Dk', gradient: 'from-sky-500 to-blue-700', ring: 'ring-sky-200 dark:ring-sky-900' },
+  git: { emoji: 'Git', gradient: 'from-teal-700 to-cyan-800', ring: 'ring-teal-200 dark:ring-teal-900' },
+  sql: { emoji: 'SQL', gradient: 'from-indigo-600 to-violet-700', ring: 'ring-indigo-200 dark:ring-indigo-900' },
+  postgres: { emoji: 'PG', gradient: 'from-blue-700 to-indigo-800', ring: 'ring-blue-200 dark:ring-blue-900' },
+  mongodb: { emoji: 'Mo', gradient: 'from-emerald-700 to-teal-800', ring: 'ring-emerald-200 dark:ring-emerald-900' },
+  aws: { emoji: 'AWS', gradient: 'from-cyan-700 to-slate-700', ring: 'ring-cyan-200 dark:ring-cyan-900' },
+  linux: { emoji: 'Lx', gradient: 'from-slate-600 to-slate-800', ring: 'ring-slate-200 dark:ring-slate-700' },
 }
 
 const CATEGORY_VISUALS: Record<TechnologyCategory, TechVisual> = {
-  FUNDAMENTALS: { emoji: '📚', gradient: 'from-violet-500 to-purple-600', ring: 'ring-violet-200' },
-  FRONTEND: { emoji: '🎨', gradient: 'from-pink-500 to-rose-500', ring: 'ring-pink-200' },
-  BACKEND: { emoji: '⚙️', gradient: 'from-emerald-500 to-teal-600', ring: 'ring-emerald-200' },
-  DATABASE: { emoji: '🗄️', gradient: 'from-indigo-500 to-blue-600', ring: 'ring-indigo-200' },
-  DEVOPS: { emoji: '🚀', gradient: 'from-orange-500 to-red-500', ring: 'ring-orange-200' },
-  TOOLING: { emoji: '🔧', gradient: 'from-slate-500 to-zinc-600', ring: 'ring-slate-200' },
+  FUNDAMENTALS: { emoji: 'Fd', gradient: 'from-violet-600 to-indigo-700', ring: 'ring-violet-200 dark:ring-violet-900' },
+  FRONTEND: { emoji: 'Fe', gradient: 'from-cyan-500 to-sky-600', ring: 'ring-cyan-200 dark:ring-cyan-900' },
+  BACKEND: { emoji: 'Be', gradient: 'from-teal-600 to-emerald-700', ring: 'ring-teal-200 dark:ring-teal-900' },
+  DATABASE: { emoji: 'Db', gradient: 'from-indigo-600 to-blue-700', ring: 'ring-indigo-200 dark:ring-indigo-900' },
+  DEVOPS: { emoji: 'Ops', gradient: 'from-sky-700 to-slate-700', ring: 'ring-sky-200 dark:ring-sky-900' },
+  TOOLING: { emoji: 'Tl', gradient: 'from-slate-500 to-slate-700', ring: 'ring-slate-200 dark:ring-slate-700' },
 }
 
 const PATH_GRADIENTS = [
-  'from-indigo-500 via-purple-500 to-pink-500',
-  'from-emerald-500 via-teal-500 to-cyan-500',
-  'from-orange-500 via-amber-500 to-yellow-500',
-  'from-blue-500 via-indigo-500 to-violet-500',
-  'from-rose-500 via-pink-500 to-fuchsia-500',
+  'from-cyan-600 via-teal-500 to-sky-500',
+  'from-indigo-500 via-blue-500 to-cyan-500',
+  'from-teal-600 via-emerald-600 to-cyan-600',
+  'from-violet-500 via-indigo-500 to-blue-500',
+  'from-sky-600 via-cyan-500 to-teal-500',
 ]
 
 export function getTechnologyVisual(slug: string, category?: TechnologyCategory): TechVisual {
   const normalized = slug.toLowerCase().replace(/[^a-z0-9-]/g, '')
   if (SLUG_VISUALS[normalized]) return SLUG_VISUALS[normalized]
   if (category && CATEGORY_VISUALS[category]) return CATEGORY_VISUALS[category]
-  return { emoji: '💻', gradient: 'from-slate-500 to-slate-700', ring: 'ring-slate-200' }
+  return { emoji: 'Dev', gradient: 'from-slate-500 to-slate-700', ring: 'ring-slate-200 dark:ring-slate-700' }
 }
 
 export function getPathGradient(index: number): string {

@@ -62,7 +62,7 @@ export function RoadmapPage() {
   const currentId = data ? findCurrentNodeId(data) : null
 
   return (
-    <AppShell sidebarSections={appSidebarSections} title="Área do aluno">
+    <AppShell sidebarSections={appSidebarSections}>
       <PageHeader
         title="Minha trilha"
         description="Foque no próximo passo — o restante fica em segundo plano."
@@ -125,10 +125,10 @@ export function RoadmapPage() {
                   <div
                     className={cn(
                       'relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold shadow-sm',
-                      isCompleted && 'bg-[var(--color-success)] text-white',
+                      isCompleted && 'bg-[var(--color-success)] text-[var(--color-primary-foreground)]',
                       isCurrent &&
                         !isCompleted &&
-                        'bg-[var(--color-primary)] text-white ring-4 ring-[var(--color-primary)]/25',
+                        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] ring-4 ring-[var(--color-primary)]/25',
                       !isCompleted &&
                         !isCurrent &&
                         'border-2 border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-muted-foreground)]',

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, GraduationCap } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PublicLayout } from '@/components/layout/AppShell'
+import { FormError, FormErrorBox } from '@/components/shared/FormError'
 import { useAuth } from '@/context/AuthContext'
 import { readIntendedLearningPathId } from '@/lib/trail-navigation'
 import { getApiErrorMessage } from '@/lib/utils'
@@ -53,16 +54,8 @@ export function LoginPage() {
 
   return (
     <PublicLayout>
-      <div className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-12">
-        <Link
-          to="/"
-          className="mb-6 flex items-center gap-2 text-lg font-bold tracking-tight text-[var(--color-foreground)]"
-        >
-          <GraduationCap className="h-7 w-7 text-[var(--color-primary)]" />
-          DevTech
-        </Link>
-
-        <Card className="w-full max-w-md">
+      <div className="hero-gradient flex min-h-[70vh] flex-col items-center justify-center px-4 py-12">
+        <Card className="w-full max-w-md shadow-md">
           <CardHeader>
             <CardTitle>Entrar</CardTitle>
             <CardDescription>
@@ -83,7 +76,7 @@ export function LoginPage() {
                   aria-invalid={!!errors.email}
                   {...register('email')}
                 />
-                {errors.email && <p className="text-sm text-red-600" role="alert">{errors.email.message}</p>}
+                <FormError>{errors.email?.message}</FormError>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Senha</Label>
@@ -105,7 +98,7 @@ export function LoginPage() {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.password && <p className="text-sm text-red-600" role="alert">{errors.password.message}</p>}
+                <FormError>{errors.password?.message}</FormError>
               </div>
 
               <button
@@ -117,14 +110,7 @@ export function LoginPage() {
                 Esqueci a senha
               </button>
 
-              {formError && (
-                <p
-                  className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
-                  role="alert"
-                >
-                  {formError}
-                </p>
-              )}
+              <FormErrorBox>{formError}</FormErrorBox>
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? 'Entrando...' : 'Entrar'}

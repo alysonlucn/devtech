@@ -12,7 +12,7 @@ export function MentorCard({ title, children, className }: MentorCardProps) {
   return (
     <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="flex flex-row items-center gap-3 border-b border-[var(--color-border)] bg-gradient-to-r from-[var(--color-primary)]/5 to-[var(--color-success)]/5 pb-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[color-mix(in_oklch,var(--color-primary)_70%,black)] text-white shadow-sm">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-deep)] text-[var(--color-primary-foreground)] shadow-sm">
           <Brain className="h-5 w-5" />
         </div>
         <div>

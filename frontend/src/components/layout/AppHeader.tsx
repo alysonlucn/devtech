@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap, LogOut, User } from 'lucide-react'
+import { GraduationCap, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/shared/ThemeToggle'
+import { UserAvatar } from '@/components/shared/UserAvatar'
 import { useAuth } from '@/context/AuthContext'
 import { getLevelInfo } from '@/lib/gamification'
 
@@ -19,14 +21,14 @@ export function AppHeader() {
           DevTech
         </Link>
 
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
           {levelInfo && (
             <>
               <div
                 className="flex items-center gap-1.5 rounded-lg bg-[var(--color-muted)] px-2 py-1 sm:hidden"
                 title={`${levelInfo.currentXp} XP · ${levelInfo.title}`}
               >
-                <span className="text-xs font-semibold text-[var(--color-xp)]">
+                <span className="text-xs font-semibold text-[var(--color-xp-foreground)]">
                   Nv.{levelInfo.level}
                 </span>
               </div>
@@ -34,7 +36,7 @@ export function AppHeader() {
                 className="hidden items-center gap-2 rounded-lg bg-[var(--color-muted)] px-2.5 py-1.5 sm:flex"
                 title={`${levelInfo.currentXp} XP · ${levelInfo.title}`}
               >
-                <span className="text-xs font-semibold text-[var(--color-xp)]">
+                <span className="text-xs font-semibold text-[var(--color-xp-foreground)]">
                   Nv. {levelInfo.level}
                 </span>
                 <div className="h-1.5 w-16 overflow-hidden rounded-full bg-[var(--color-border)]">
@@ -56,11 +58,13 @@ export function AppHeader() {
             </Button>
           )}
 
+          <ThemeToggle />
+
           <Link
             to="/app/perfil"
             className="flex min-w-0 items-center gap-1.5 sm:gap-2 rounded-lg px-1.5 py-1 transition-colors hover:bg-[var(--color-accent)]"
           >
-            <User className="hidden h-4 w-4 shrink-0 text-[var(--color-muted-foreground)] sm:block" />
+            {user?.name && <UserAvatar name={user.name} size="sm" className="hidden h-7 w-7 sm:flex" />}
             <span className="truncate text-sm font-medium max-w-[8rem] sm:max-w-[12rem]">
               {user?.name}
             </span>

@@ -14,30 +14,10 @@ import { getPathGradient } from '@/lib/technology-visuals'
 import { cn } from '@/lib/utils'
 
 const features = [
-  {
-    icon: Target,
-    title: 'Trilhas personalizadas',
-    description: 'Caminhos estruturados do básico ao avançado, com ordem clara do que estudar.',
-    color: 'text-[var(--color-primary)] bg-[var(--color-primary)]/10',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Progresso gamificado',
-    description: 'XP, níveis, sequências diárias e validação de competências com avaliações práticas.',
-    color: 'text-[var(--color-success)] bg-[var(--color-success)]/10',
-  },
-  {
-    icon: Brain,
-    title: 'Mentoria com IA',
-    description: 'Recomendações personalizadas, análise de vagas e avaliações com IA para acelerar sua carreira.',
-    color: 'text-[var(--color-primary)] bg-[var(--color-primary)]/10',
-  },
-  {
-    icon: BookOpen,
-    title: 'Catálogo curado',
-    description: 'Tecnologias, recursos, projetos e competências organizados em um só lugar.',
-    color: 'text-[var(--color-warning)] bg-[var(--color-warning)]/15',
-  },
+  { icon: Target, title: 'Trilhas personalizadas', description: 'Caminhos estruturados do básico ao avançado, com ordem clara do que estudar.', color: 'text-[var(--color-primary)] bg-[var(--color-primary)]/10' },
+  { icon: TrendingUp, title: 'Progresso gamificado', description: 'XP, níveis, sequências diárias e validação de competências com avaliações práticas.', color: 'text-[var(--color-xp-foreground)] bg-[var(--color-xp)]/15' },
+  { icon: Brain, title: 'Mentoria com IA', description: 'Recomendações personalizadas, análise de vagas e avaliações com IA para acelerar sua carreira.', color: 'text-[var(--color-success-foreground)] bg-[var(--color-success)]/12' },
+  { icon: BookOpen, title: 'Catálogo curado', description: 'Tecnologias, recursos, projetos e competências organizados em um só lugar.', color: 'text-[var(--color-warning-foreground)] bg-[var(--color-warning)]/15' },
 ]
 
 const steps = [
@@ -68,9 +48,9 @@ function RoadmapIllustration() {
               <div
                 className={cn(
                   'z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 text-xs font-bold shadow-sm',
-                  node.done && 'border-[var(--color-success)] bg-[var(--color-success)] text-white',
+                  node.done && 'border-[var(--color-success)] bg-[var(--color-success)] text-[var(--color-primary-foreground)]',
                   node.current &&
-                    'border-[var(--color-primary)] bg-[var(--color-primary)] text-white ring-4 ring-[var(--color-primary)]/25',
+                    'border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)] ring-4 ring-[var(--color-primary)]/25',
                   !node.done &&
                     !node.current &&
                     'border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-muted-foreground)]',
@@ -206,7 +186,7 @@ export function HomePage() {
                 {paths!.data.slice(0, 3).map((path, index) => {
                   const nav = getTrailNavigation(path.id, isAuthenticated)
                   return (
-                    <Link key={path.id} to={nav.to} state={nav.state} className="group block focus-visible:outline-none">
+                    <Link key={path.id} to={nav.to} state={nav.state} className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]">
                       <Card className="path-card h-full overflow-hidden">
                         <div className={cn('h-1.5 bg-gradient-to-r transition-all duration-300 group-hover:h-2.5', getPathGradient(index))} />
                         <CardHeader>
@@ -239,7 +219,7 @@ export function HomePage() {
         <div className="grid gap-8 md:grid-cols-3">
           {steps.map((step) => (
             <div key={step.num} className="relative text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] text-lg font-bold text-white shadow-md">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] text-lg font-bold text-[var(--color-primary-foreground)] shadow-md">
                 {step.num}
               </div>
               <h3 className="font-semibold text-lg">{step.title}</h3>
@@ -270,7 +250,7 @@ export function HomePage() {
             ) : (
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {technologies!.data.slice(0, 6).map((tech) => (
-                  <Link key={tech.id} to={`/tecnologias/${tech.id}`} className="group block focus-visible:outline-none">
+                  <Link key={tech.id} to={`/tecnologias/${tech.id}`} className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]">
                     <Card className="card-hover">
                       <CardContent className="flex items-center gap-4 p-4">
                         <TechnologyAvatar name={tech.name} slug={tech.slug} category={tech.category} />
@@ -306,13 +286,13 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-t border-[var(--color-border)] bg-gradient-to-br from-[var(--color-primary)] to-[color-mix(in_oklch,var(--color-primary)_70%,black)] py-16 text-white">
+      <section className="border-t border-[var(--color-border)] bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-deep)] py-16 text-[var(--color-primary-foreground)]">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <CheckCircle2 className="mx-auto mb-4 h-10 w-10 opacity-90" />
           <h2 className="text-2xl font-bold sm:text-3xl">
             {isAuthenticated ? 'Continue de onde parou' : 'Pronto para evoluir na carreira?'}
           </h2>
-          <p className="mt-4 text-white/85">
+          <p className="mt-4 text-[var(--color-primary-foreground)]/85">
             {isAuthenticated
               ? 'Acesse sua trilha, acompanhe o progresso e avance no próximo passo.'
               : 'Crie sua conta gratuita, escolha uma trilha e comece hoje mesmo.'}
@@ -320,7 +300,7 @@ export function HomePage() {
           <Button
             size="lg"
             variant="secondary"
-            className="mt-8 bg-white text-[var(--color-primary)] hover:bg-white/90"
+            className="mt-8 bg-[var(--color-primary-foreground)] text-[var(--color-primary)] hover:bg-[var(--color-primary-foreground)]/90"
             asChild
           >
             {isAuthenticated ? (

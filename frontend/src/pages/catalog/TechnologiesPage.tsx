@@ -64,7 +64,7 @@ export function TechnologiesPage() {
         {data && data.data.length > 0 && (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {data.data.map((tech) => (
-              <Link key={tech.id} to={`/tecnologias/${tech.id}`}>
+              <Link key={tech.id} to={`/tecnologias/${tech.id}`} className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]">
                 <Card className="card-hover h-full">
                   <CardHeader>
                     <div className="flex items-start gap-4">

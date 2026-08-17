@@ -25,6 +25,7 @@ import { adminSidebarLinks } from '@/components/layout/Sidebar'
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { PageHeader } from '@/components/shared/PageHeader'
+import { FormError } from '@/components/shared/FormError'
 import { getApiErrorMessage } from '@/lib/utils'
 import type { LearningPath } from '@/types/entities'
 
@@ -112,7 +113,7 @@ export function AdminLearningPathsPage() {
   }
 
   return (
-    <AppShell sidebarLinks={adminSidebarLinks} title="Administração">
+    <AppShell sidebarLinks={adminSidebarLinks}>
       <PageHeader
         title="Trilhas"
         description="Gerencie trilhas de aprendizado."
@@ -147,7 +148,7 @@ export function AdminLearningPathsPage() {
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => setDeleteId(path.id)}>
-                    <Trash2 className="h-4 w-4 text-red-600" />
+                    <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                   </Button>
                 </div>
               </CardContent>
@@ -165,7 +166,7 @@ export function AdminLearningPathsPage() {
             <div className="space-y-2">
               <Label>Título</Label>
               <Input {...register('title')} />
-              {errors.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
+                <FormError>{errors.title?.message}</FormError>
             </div>
             <div className="space-y-2">
               <Label>Identificador na URL (opcional)</Label>
@@ -174,7 +175,7 @@ export function AdminLearningPathsPage() {
             <div className="space-y-2">
               <Label>Descrição</Label>
               <Textarea {...register('description')} />
-              {errors.description && <p className="text-sm text-red-600">{errors.description.message}</p>}
+                <FormError>{errors.description?.message}</FormError>
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={closeDialog}>Cancelar</Button>

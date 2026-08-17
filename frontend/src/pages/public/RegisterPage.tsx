@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Check, Eye, EyeOff, GraduationCap, X } from 'lucide-react'
+import { Check, Eye, EyeOff, X } from 'lucide-react'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PublicLayout } from '@/components/layout/AppShell'
+import { FormError } from '@/components/shared/FormError'
 import { useAuth } from '@/context/AuthContext'
 import { readIntendedLearningPathId } from '@/lib/trail-navigation'
 import { cn, getApiErrorMessage } from '@/lib/utils'
@@ -62,16 +63,8 @@ export function RegisterPage() {
 
   return (
     <PublicLayout>
-      <div className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-12">
-        <Link
-          to="/"
-          className="mb-6 flex items-center gap-2 text-lg font-bold tracking-tight text-[var(--color-foreground)]"
-        >
-          <GraduationCap className="h-7 w-7 text-[var(--color-primary)]" />
-          DevTech
-        </Link>
-
-        <Card className="w-full max-w-md">
+      <div className="hero-gradient flex min-h-[70vh] flex-col items-center justify-center px-4 py-12">
+        <Card className="w-full max-w-md shadow-md">
           <CardHeader>
             <CardTitle>Criar conta</CardTitle>
             <CardDescription>
@@ -91,7 +84,7 @@ export function RegisterPage() {
                   aria-invalid={!!errors.name}
                   {...register('name')}
                 />
-                {errors.name && <p className="text-sm text-red-600" role="alert">{errors.name.message}</p>}
+                <FormError>{errors.name?.message}</FormError>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">E-mail</Label>
@@ -103,7 +96,7 @@ export function RegisterPage() {
                   aria-invalid={!!errors.email}
                   {...register('email')}
                 />
-                {errors.email && <p className="text-sm text-red-600" role="alert">{errors.email.message}</p>}
+                <FormError>{errors.email?.message}</FormError>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Senha</Label>
@@ -125,7 +118,7 @@ export function RegisterPage() {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.password && <p className="text-sm text-red-600" role="alert">{errors.password.message}</p>}
+                <FormError>{errors.password?.message}</FormError>
 
                 <ul className="mt-2 space-y-1.5" aria-label="Requisitos da senha">
                   {passwordRules.map((rule) => {
@@ -135,7 +128,7 @@ export function RegisterPage() {
                         key={rule.id}
                         className={cn(
                           'flex items-center gap-2 text-xs',
-                          ok ? 'text-[var(--color-success)]' : 'text-[var(--color-muted-foreground)]',
+                          ok ? 'text-[var(--color-success-foreground)]' : 'text-[var(--color-muted-foreground)]',
                         )}
                       >
                         {ok ? <Check className="h-3.5 w-3.5 shrink-0" /> : <X className="h-3.5 w-3.5 shrink-0" />}
