@@ -51,16 +51,17 @@ services:
       - key: LOG_LEVEL
         value: info
 
-  # Web service (não static site): o publish estático no Render estava
-  # servindo o HTML sem os assets (/assets/*.js → 404 → tela branca).
-  - type: web
+  # Mantém type: static — o Render não permite mudar o tipo de um serviço já criado.
+  # Publish em dist + rewrite SPA para o React Router (evita tela branca / 404 em /assets).
+  - type: static
     name: devpath-alysonlucn-web
-    runtime: node
-    plan: free
-    region: oregon
     rootDir: frontend
     buildCommand: npm ci && npm run build
-    startCommand: npm run start
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
       - key: NODE_VERSION
         value: '22'
