@@ -31,7 +31,7 @@ import {
 } from '@/lib/resource-progress'
 import { getApiErrorMessage } from '@/lib/utils'
 import type { Resource, RoadmapItem, Technology } from '@/types/entities'
-import { ProgressStatus } from '@/types/enums'
+import { ProgressStatus, ProjectStatus } from '@/types/enums'
 
 function findTrailContext(roadmap: RoadmapItem[] | undefined, technologyId: string) {
   if (!roadmap?.length) return null
@@ -221,6 +221,12 @@ export function TechnologyDetailPage() {
     enabled: isAuthenticated,
   })
 
+  const { data: userProjects } = useQuery({
+    queryKey: ['user-projects'],
+    queryFn: () => userApi.getProjects(),
+    enabled: isAuthenticated,
+  })
+
   const progress = progressList?.find((p) => p.technologyId === id)
   const trail = id ? findTrailContext(roadmap, id) : null
 
@@ -248,7 +254,18 @@ export function TechnologyDetailPage() {
   const projectMutation = useMutation({
     mutationFn: (projectId: string) => userApi.startProject(projectId),
     onSuccess: () => {
-      toast.success('Projeto iniciado! Veja em Projetos.')
+      toast.success('Desafio iniciado! Marque como concluído quando terminar.')
+      void queryClient.invalidateQueries({ queryKey: ['user-projects'] })
+      void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    },
+    onError: (error) => toast.error(getApiErrorMessage(error)),
+  })
+
+  const completeProjectMutation = useMutation({
+    mutationFn: (userProjectId: string) =>
+      userApi.updateProject(userProjectId, ProjectStatus.FINISHED),
+    onSuccess: () => {
+      toast.success('Prática marcada como concluída!')
       void queryClient.invalidateQueries({ queryKey: ['user-projects'] })
       void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
@@ -269,6 +286,14 @@ export function TechnologyDetailPage() {
   const competencies = tech?.competencies ?? []
   const dependencies = tech?.dependencies ?? []
 
+  const finishedProjectIds = useMemo(
+    () =>
+      (userProjects ?? [])
+        .filter((p) => p.status === ProjectStatus.FINISHED)
+        .map((p) => p.projectId),
+    [userProjects],
+  )
+
   const status = progress?.status
   const focus = useMemo(
     () =>
@@ -277,9 +302,10 @@ export function TechnologyDetailPage() {
         resources: tech?.resources ?? [],
         projects: tech?.projects ?? [],
         openedResourceIds: openedIds,
+        finishedProjectIds,
         nextTechnology: trail?.next,
       }),
-    [status, tech?.resources, tech?.projects, openedIds, trail?.next],
+    [status, tech?.resources, tech?.projects, openedIds, finishedProjectIds, trail?.next],
   )
 
   const progressPercentage =
@@ -292,7 +318,10 @@ export function TechnologyDetailPage() {
       resources.length === 0
         ? '—'
         : `${openedIds.filter((rid) => resources.some((r) => r.id === rid)).length}/${resources.length}`,
-    practice: projects.length === 0 ? '—' : `0/${projects.length}`,
+    practice:
+      projects.length === 0
+        ? '—'
+        : `${projects.filter((p) => finishedProjectIds.includes(p.id)).length}/${projects.length}`,
     validate:
       status === ProgressStatus.VALIDATED
         ? 'Concluído'
@@ -366,8 +395,12 @@ export function TechnologyDetailPage() {
     return <CatalogView tech={tech} />
   }
 
+  const canMarkReady =
+    (resources.length === 0 || resources.every((r) => openedIds.includes(r.id))) &&
+    (projects.length === 0 || projects.every((p) => finishedProjectIds.includes(p.id)))
+
   const secondaryLink =
-    status === ProgressStatus.IN_PROGRESS && progress?.id ? (
+    status === ProgressStatus.IN_PROGRESS && progress?.id && canMarkReady ? (
       <button
         type="button"
         className="text-sm font-medium text-[var(--color-muted-foreground)] underline-offset-4 hover:text-[var(--color-foreground)] hover:underline"
@@ -551,10 +584,15 @@ export function TechnologyDetailPage() {
               competencies={competencies}
               openedResourceIds={openedIds}
               onOpenResource={handleOpenResource}
+              userProjects={userProjects}
               onStartProject={(projectId) => projectMutation.mutate(projectId)}
+              onCompleteProject={(userProjectId) => completeProjectMutation.mutate(userProjectId)}
               onMarkReady={() => readyMutation.mutate()}
               markingReady={readyMutation.isPending}
               startingProjectId={projectMutation.isPending ? projectMutation.variables ?? null : null}
+              completingProjectId={
+                completeProjectMutation.isPending ? completeProjectMutation.variables ?? null : null
+              }
               status={status}
             />
           </div>

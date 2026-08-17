@@ -27,6 +27,11 @@ apiClient.interceptors.request.use((config) => {
 
 let refreshPromise: Promise<string | null> | null = null
 
+function isPublicAuthRequest(config?: InternalAxiosRequestConfig) {
+  const path = config?.url ?? ''
+  return /\/auth\/(login|register|refresh)(\?|$)/.test(path)
+}
+
 async function refreshAccessToken(): Promise<string | null> {
   const refreshToken = tokenStorage.getRefreshToken()
   if (!refreshToken) return null
@@ -49,7 +54,12 @@ apiClient.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !isPublicAuthRequest(originalRequest)
+    ) {
       originalRequest._retry = true
 
       if (!refreshPromise) {

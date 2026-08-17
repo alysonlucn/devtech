@@ -41,7 +41,11 @@ services:
       - key: ASSESSMENT_PASS_SCORE
         value: '70'
       - key: LLM_PROVIDER
-        value: mock
+        value: groq
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
+      - key: GROQ_API_KEY
+        sync: false
       - key: SEED_DATABASE
         value: 'true'
       - key: LOG_LEVEL

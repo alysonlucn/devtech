@@ -29,12 +29,14 @@ export function LoginPage() {
   const from = locationState?.from?.pathname ?? '/app/dashboard'
   const intendedLearningPathId = readIntendedLearningPathId(locationState)
   const [showPassword, setShowPassword] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   })
 
   async function onSubmit(data: LoginForm) {
+    setFormError(null)
     try {
       await login(data.email, data.password)
       toast.success('Acesso realizado com sucesso!')
@@ -43,7 +45,9 @@ export function LoginPage() {
         state: intendedLearningPathId ? { intendedLearningPathId } : undefined,
       })
     } catch (error) {
-      toast.error(getApiErrorMessage(error, 'Credenciais inválidas'))
+      const message = getApiErrorMessage(error, 'Não foi possível entrar. Verifique o e-mail e a senha.')
+      setFormError(message)
+      toast.error(message)
     }
   }
 
@@ -112,6 +116,15 @@ export function LoginPage() {
               >
                 Esqueci a senha
               </button>
+
+              {formError && (
+                <p
+                  className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+                  role="alert"
+                >
+                  {formError}
+                </p>
+              )}
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? 'Entrando...' : 'Entrar'}

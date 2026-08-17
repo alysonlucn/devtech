@@ -83,7 +83,7 @@ A integração com LLM é desacoplada via interface `LLMProvider`.
 
 | Provedor | Variáveis de ambiente |
 |----------|----------------------|
-| **Groq** (padrão) | `LLM_PROVIDER=groq`, `GROQ_API_KEY`, `GROQ_MODEL` |
+| **Groq** (padrão) | `LLM_PROVIDER=groq`, `GROQ_API_KEY`, `GROQ_MODEL` (`openai/gpt-oss-120b`) |
 | **OpenAI** | `LLM_PROVIDER=openai`, `OPENAI_API_KEY`, `OPENAI_MODEL` |
 | **Mock** | `LLM_PROVIDER=mock` (sem chave necessária) |
 

@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { logger } from '../../utils/logger';
+import { AppError } from '../../errors/app.errors';
 import {
   AssessmentInput,
   AssessmentResult,
@@ -30,11 +31,35 @@ export class OpenAICompatibleProvider implements LLMProvider {
   }
 
   async chat(messages: ChatMessage[]): Promise<string> {
-    const response = await this.client.chat.completions.create({
-      model: this.model,
-      messages,
-    });
-    return response.choices[0]?.message?.content ?? '';
+    try {
+      const response = await this.client.chat.completions.create({
+        model: this.model,
+        messages,
+        temperature: 0.2,
+        response_format: { type: 'json_object' },
+      });
+      const content = response.choices[0]?.message?.content ?? '';
+      if (!content.trim()) {
+        throw new AppError('A IA não retornou uma resposta. Tente novamente.', 502);
+      }
+      return content;
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      const status = (error as { status?: number }).status;
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error('Falha na chamada ao LLM', { status, message, model: this.model });
+
+      if (status === 401 || status === 403) {
+        throw new AppError('A chave da IA é inválida ou está sem permissão.', 502);
+      }
+      if (status === 404 || /does not exist or you do not have access/i.test(message)) {
+        throw new AppError('O modelo de IA configurado não está mais disponível.', 502);
+      }
+      if (status === 429) {
+        throw new AppError('A IA está temporariamente sobrecarregada. Tente novamente em instantes.', 429);
+      }
+      throw new AppError('Não foi possível gerar a resposta da IA. Tente novamente.', 502);
+    }
   }
 
   async assessment(input: AssessmentInput): Promise<AssessmentResult> {
@@ -92,12 +117,19 @@ Analise a compatibilidade com a vaga. Responda APENAS com JSON válido (textos e
   }
 
   private parseJson<T>(content: string): T {
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    const fenced = content.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    const source = fenced?.[1] ?? content;
+    const jsonMatch = source.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       logger.error('Falha ao analisar resposta JSON do LLM', { content });
-      throw new Error('Formato de resposta do LLM inválido');
+      throw new AppError('A IA retornou um formato inválido. Tente novamente.', 502);
     }
-    return JSON.parse(jsonMatch[0]) as T;
+    try {
+      return JSON.parse(jsonMatch[0]) as T;
+    } catch {
+      logger.error('JSON do LLM inválido', { content });
+      throw new AppError('A IA retornou um formato inválido. Tente novamente.', 502);
+    }
   }
 }
 

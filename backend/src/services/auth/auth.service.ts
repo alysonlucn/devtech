@@ -2,7 +2,7 @@ import { UserRepository } from '../../repositories/user.repository';
 import { RefreshTokenRepository } from '../../repositories/refresh-token.repository';
 import { UserProfileRepository } from '../../repositories/user-profile.repository';
 import { UserStreakRepository } from '../../repositories/user-streak.repository';
-import { ConflictError, UnauthorizedError } from '../../errors/app.errors';
+import { ConflictError, NotFoundError, UnauthorizedError } from '../../errors/app.errors';
 import { hashPassword, comparePassword } from '../../utils/password';
 import {
   createTokenPayload,
@@ -44,10 +44,10 @@ export class AuthService {
 
   async login(dto: LoginDto): Promise<{ user: SafeUser; tokens: TokenPair }> {
     const user = await this.userRepository.findByEmailWithPassword(dto.email);
-    if (!user) throw new UnauthorizedError('Credenciais inválidas');
+    if (!user) throw new NotFoundError('Este e-mail não está cadastrado');
 
     const valid = await comparePassword(dto.password, user.password);
-    if (!valid) throw new UnauthorizedError('Credenciais inválidas');
+    if (!valid) throw new UnauthorizedError('Senha incorreta');
 
     const tokens = await this.generateTokens(user);
     return { user: this.toSafeUser(user), tokens };

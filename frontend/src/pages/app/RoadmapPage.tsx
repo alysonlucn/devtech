@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { CheckCircle2 } from 'lucide-react'
@@ -29,6 +29,7 @@ function findCurrentNodeId(items: RoadmapItem[]): string | null {
 }
 
 export function RoadmapPage() {
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const { data, isLoading, isError } = useQuery({
@@ -38,9 +39,10 @@ export function RoadmapPage() {
 
   const startMutation = useMutation({
     mutationFn: (technologyId: string) => userApi.startProgress(technologyId),
-    onSuccess: () => {
+    onSuccess: (_data, technologyId) => {
       toast.success('Tecnologia iniciada! Bora estudar 🚀')
       void queryClient.invalidateQueries({ queryKey: ['roadmap'] })
+      navigate(`/tecnologias/${technologyId}`)
     },
     onError: (error) => toast.error(getApiErrorMessage(error)),
   })

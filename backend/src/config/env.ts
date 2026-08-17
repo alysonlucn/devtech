@@ -20,7 +20,7 @@ const envSchema = z.object({
   ASSESSMENT_PASS_SCORE: z.coerce.number().min(0).max(100).default(70),
   LLM_PROVIDER: z.enum(['groq', 'openai', 'mock']).default('mock'),
   GROQ_API_KEY: z.string().optional(),
-  GROQ_MODEL: z.string().default('llama-3.3-70b-versatile'),
+  GROQ_MODEL: z.string().default('openai/gpt-oss-120b'),
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_MODEL: z.string().default('gpt-4o-mini'),
   SEED_DATABASE: z

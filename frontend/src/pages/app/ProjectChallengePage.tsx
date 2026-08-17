@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, ArrowRight, Rocket } from 'lucide-react'
 import { toast } from 'sonner'
@@ -11,6 +11,7 @@ import { DifficultyBadge } from '@/components/shared/DifficultyBadge'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner'
 import { getApiErrorMessage } from '@/lib/utils'
+import { ProjectStatus } from '@/types/enums'
 
 function ChallengeBody({ text }: { text: string }) {
   const blocks = text.split(/\n\n+/).filter(Boolean)
@@ -61,7 +62,6 @@ function ChallengeBody({ text }: { text: string }) {
 
 export function ProjectChallengePage() {
   const { projectId } = useParams<{ projectId: string }>()
-  const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const { data: project, isLoading, isError } = useQuery({
@@ -76,14 +76,26 @@ export function ProjectChallengePage() {
   })
 
   const alreadyStarted = userProjects?.some((p) => p.projectId === projectId)
+  const userProject = userProjects?.find((p) => p.projectId === projectId)
+  const isFinished = userProject?.status === ProjectStatus.FINISHED
 
   const startMutation = useMutation({
     mutationFn: () => userApi.startProject(projectId!),
     onSuccess: () => {
-      toast.success('Desafio iniciado!')
+      toast.success('Desafio iniciado! Marque como concluído quando terminar.')
       void queryClient.invalidateQueries({ queryKey: ['user-projects'] })
       void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
-      navigate('/app/projetos')
+    },
+    onError: (error) => toast.error(getApiErrorMessage(error)),
+  })
+
+  const completeMutation = useMutation({
+    mutationFn: (userProjectId: string) =>
+      userApi.updateProject(userProjectId, ProjectStatus.FINISHED),
+    onSuccess: () => {
+      toast.success('Prática marcada como concluída!')
+      void queryClient.invalidateQueries({ queryKey: ['user-projects'] })
+      void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
     onError: (error) => toast.error(getApiErrorMessage(error)),
   })
@@ -138,12 +150,21 @@ export function ProjectChallengePage() {
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-          {alreadyStarted ? (
+          {isFinished ? (
             <Button size="lg" asChild>
-              <Link to="/app/projetos">
-                Ver em Meus projetos
+              <Link to={backTo}>
+                Prática concluída
                 <ArrowRight className="h-4 w-4" />
               </Link>
+            </Button>
+          ) : alreadyStarted && userProject ? (
+            <Button
+              size="lg"
+              onClick={() => completeMutation.mutate(userProject.id)}
+              disabled={completeMutation.isPending}
+            >
+              {completeMutation.isPending ? 'Salvando...' : 'Marcar como concluído'}
+              <ArrowRight className="h-4 w-4" />
             </Button>
           ) : (
             <Button

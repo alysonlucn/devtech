@@ -39,7 +39,7 @@ services:
       ASSESSMENT_PASS_SCORE: 70
       LLM_PROVIDER: groq
       GROQ_API_KEY: ${GROQ_API_KEY:-}
-      GROQ_MODEL: llama-3.3-70b-versatile
+      GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-120b}
       SEED_DATABASE: 'true'
       LOG_LEVEL: info
     depends_on:

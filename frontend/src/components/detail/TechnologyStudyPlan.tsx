@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { ChevronLeft, ChevronRight, ExternalLink, Rocket } from 'lucide-react'
+import { CheckCircle2, ChevronLeft, ChevronRight, ExternalLink, Lock, Rocket } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { resourceTypeLabels } from '@/lib/labels'
 import { cn } from '@/lib/utils'
-import type { Competency, ProjectSuggestion, Resource } from '@/types/entities'
-import { ProgressStatus } from '@/types/enums'
+import type { Competency, ProjectSuggestion, Resource, UserProject } from '@/types/entities'
+import { ProgressStatus, ProjectStatus } from '@/types/enums'
 
 export type StudyFocus =
   | { kind: 'start' }
@@ -24,19 +25,31 @@ const STAGES: { id: StudyStage; label: string; number: number }[] = [
   { id: 'validate', label: 'Validar', number: 3 },
 ]
 
+const LOCK_MESSAGES: Record<Exclude<StudyStage, 'study'>, string> = {
+  practice: 'Termine os materiais de Estudar para desbloquear Praticar.',
+  validate: 'Conclua a prática para desbloquear Validar.',
+}
+
 interface TechnologyStudyPlanProps {
   technologyId: string
   resources: Resource[]
   projects: ProjectSuggestion[]
   competencies: Competency[]
   openedResourceIds: string[]
+  userProjects?: UserProject[]
   onOpenResource: (resource: Resource) => void
   onStartProject?: (projectId: string) => void
+  onCompleteProject?: (userProjectId: string) => void
   onMarkReady?: () => void
   markingReady?: boolean
   startingProjectId?: string | null
+  completingProjectId?: string | null
   status?: ProgressStatus
   className?: string
+}
+
+function isPastStudyGate(status?: ProgressStatus) {
+  return status === ProgressStatus.READY_FOR_ASSESSMENT || status === ProgressStatus.VALIDATED
 }
 
 export function resolveStudyFocus(params: {
@@ -44,9 +57,17 @@ export function resolveStudyFocus(params: {
   resources: Resource[]
   projects: ProjectSuggestion[]
   openedResourceIds: string[]
+  finishedProjectIds?: string[]
   nextTechnology?: { id: string; name: string } | null
 }): StudyFocus {
-  const { status, resources, projects, openedResourceIds, nextTechnology } = params
+  const {
+    status,
+    resources,
+    projects,
+    openedResourceIds,
+    finishedProjectIds = [],
+    nextTechnology,
+  } = params
 
   if (!status || status === ProgressStatus.NOT_STARTED) {
     return { kind: 'start' }
@@ -66,7 +87,8 @@ export function resolveStudyFocus(params: {
   const nextResource = resources.find((r) => !openedResourceIds.includes(r.id))
   if (nextResource) return { kind: 'resource', resource: nextResource }
 
-  if (projects.length > 0) return { kind: 'project', project: projects[0] }
+  const nextProject = projects.find((p) => !finishedProjectIds.includes(p.id))
+  if (nextProject) return { kind: 'project', project: nextProject }
 
   return { kind: 'ready' }
 }
@@ -92,34 +114,50 @@ export function TechnologyStudyPlan({
   projects,
   competencies,
   openedResourceIds,
+  userProjects = [],
   onOpenResource,
   onStartProject,
+  onCompleteProject,
   onMarkReady,
   markingReady,
   startingProjectId,
+  completingProjectId,
   status,
   className,
 }: TechnologyStudyPlanProps) {
+  const finishedProjectIds = userProjects
+    .filter((p) => p.status === ProjectStatus.FINISHED)
+    .map((p) => p.projectId)
+
   const focus = resolveStudyFocus({
     status,
     resources,
     projects,
     openedResourceIds,
+    finishedProjectIds,
   })
   const suggestedStage = focusToStage(focus)
   const [activeStage, setActiveStage] = useState<StudyStage>(suggestedStage)
 
-  useEffect(() => {
-    setActiveStage(suggestedStage)
-  }, [suggestedStage, technologyId])
-
   const openedCount = resources.filter((r) => openedResourceIds.includes(r.id)).length
-  const studyDone = resources.length === 0 || openedCount >= resources.length
+  const finishedCount = projects.filter((p) => finishedProjectIds.includes(p.id)).length
+  const studyDone = resources.length === 0 || openedCount >= resources.length || isPastStudyGate(status)
+  const practiceDone = projects.length === 0 || finishedCount >= projects.length || isPastStudyGate(status)
   const validateDone = status === ProgressStatus.VALIDATED
+
+  const unlocked: Record<StudyStage, boolean> = {
+    study: true,
+    practice: studyDone,
+    validate: studyDone && practiceDone,
+  }
+
+  useEffect(() => {
+    setActiveStage(unlocked[suggestedStage] ? suggestedStage : 'study')
+  }, [suggestedStage, technologyId, unlocked.practice, unlocked.validate])
 
   const stageProgress: Record<StudyStage, string> = {
     study: resources.length > 0 ? `${openedCount}/${resources.length}` : '—',
-    practice: projects.length > 0 ? `0/${projects.length}` : '—',
+    practice: projects.length > 0 ? `${finishedCount}/${projects.length}` : '—',
     validate:
       status === ProgressStatus.VALIDATED
         ? 'OK'
@@ -130,21 +168,29 @@ export function TechnologyStudyPlan({
 
   const doneFlags: Record<StudyStage, boolean> = {
     study: studyDone && !!status && status !== ProgressStatus.NOT_STARTED,
-    practice:
-      (projects.length === 0 && studyDone && !!status && status !== ProgressStatus.NOT_STARTED) ||
-      status === ProgressStatus.READY_FOR_ASSESSMENT ||
-      status === ProgressStatus.VALIDATED,
+    practice: practiceDone && !!status && status !== ProgressStatus.NOT_STARTED,
     validate: validateDone,
   }
 
   const activeIndex = STAGES.findIndex((s) => s.id === activeStage)
+  const nextStage = STAGES[activeIndex + 1]
+  const nextLocked = nextStage ? !unlocked[nextStage.id] : false
+
+  function selectStage(stage: StudyStage) {
+    if (!unlocked[stage]) {
+      if (stage !== 'study') toast.info(LOCK_MESSAGES[stage])
+      return
+    }
+    setActiveStage(stage)
+  }
 
   function goPrev() {
     if (activeIndex > 0) setActiveStage(STAGES[activeIndex - 1].id)
   }
 
   function goNext() {
-    if (activeIndex < STAGES.length - 1) setActiveStage(STAGES[activeIndex + 1].id)
+    if (!nextStage) return
+    selectStage(nextStage.id)
   }
 
   return (
@@ -166,18 +212,22 @@ export function TechnologyStudyPlan({
         {STAGES.map((stage) => {
           const isActive = activeStage === stage.id
           const isSuggested = suggestedStage === stage.id
+          const isLocked = !unlocked[stage.id]
           return (
             <button
               key={stage.id}
               type="button"
               role="tab"
               aria-selected={isActive}
-              onClick={() => setActiveStage(stage.id)}
+              aria-disabled={isLocked}
+              onClick={() => selectStage(stage.id)}
               className={cn(
                 'relative flex flex-1 flex-col items-center gap-0.5 rounded-lg px-2 py-2.5 text-center transition-colors sm:flex-row sm:justify-center sm:gap-2',
                 isActive
                   ? 'bg-[var(--color-card)] text-[var(--color-foreground)] shadow-sm'
-                  : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]',
+                  : isLocked
+                    ? 'cursor-not-allowed text-[var(--color-muted-foreground)]/70'
+                    : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]',
               )}
             >
               <span
@@ -185,18 +235,20 @@ export function TechnologyStudyPlan({
                   'flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold',
                   doneFlags[stage.id]
                     ? 'bg-[var(--color-success)] text-white'
-                    : isActive
-                      ? 'bg-[var(--color-primary)] text-white'
-                      : 'bg-[var(--color-border)] text-[var(--color-muted-foreground)]',
+                    : isLocked
+                      ? 'bg-[var(--color-border)] text-[var(--color-muted-foreground)]'
+                      : isActive
+                        ? 'bg-[var(--color-primary)] text-white'
+                        : 'bg-[var(--color-border)] text-[var(--color-muted-foreground)]',
                 )}
               >
-                {doneFlags[stage.id] ? '✓' : stage.number}
+                {doneFlags[stage.id] ? '✓' : isLocked ? <Lock className="h-3 w-3" /> : stage.number}
               </span>
               <span className="text-xs font-semibold sm:text-sm">{stage.label}</span>
               <span className="hidden text-[10px] text-[var(--color-muted-foreground)] sm:inline">
-                {stageProgress[stage.id]}
+                {isLocked ? 'Bloqueado' : stageProgress[stage.id]}
               </span>
-              {isSuggested && !isActive && (
+              {isSuggested && !isActive && !isLocked && (
                 <span className="absolute -top-1 right-1 h-2 w-2 rounded-full bg-[var(--color-primary)]" title="Etapa sugerida" />
               )}
             </button>
@@ -304,21 +356,30 @@ export function TechnologyStudyPlan({
             ) : (
               <ul className="space-y-2">
                 {projects.map((project) => {
+                  const userProject = userProjects.find((p) => p.projectId === project.id)
+                  const isFinished = userProject?.status === ProjectStatus.FINISHED
+                  const isStarted = Boolean(userProject)
                   const isFocus = focus.kind === 'project' && focus.project.id === project.id
                   return (
                     <li
                       key={project.id}
                       className={cn(
                         'rounded-xl border px-4 py-4',
-                        isFocus
-                          ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5 ring-2 ring-[var(--color-primary)]/15'
-                          : 'border-[var(--color-border)]',
+                        isFinished
+                          ? 'border-[var(--color-success)]/30 bg-[var(--color-success)]/5'
+                          : isFocus
+                            ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5 ring-2 ring-[var(--color-primary)]/15'
+                            : 'border-[var(--color-border)]',
                       )}
                     >
                       <div className="flex flex-col gap-4">
                         <div className="flex gap-3">
                           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent)]">
-                            <Rocket className="h-4 w-4 text-[var(--color-primary)]" />
+                            {isFinished ? (
+                              <CheckCircle2 className="h-4 w-4 text-[var(--color-success)]" />
+                            ) : (
+                              <Rocket className="h-4 w-4 text-[var(--color-primary)]" />
+                            )}
                           </div>
                           <div className="min-w-0">
                             <p className="font-medium">{project.title}</p>
@@ -332,7 +393,20 @@ export function TechnologyStudyPlan({
                           <Button size="sm" variant="outline" asChild>
                             <Link to={`/app/desafios/${project.id}`}>Ver desafio</Link>
                           </Button>
-                          {onStartProject ? (
+                          {isFinished ? (
+                            <span className="inline-flex items-center rounded-md px-3 text-sm font-medium text-[var(--color-success)]">
+                              Concluído
+                            </span>
+                          ) : isStarted && onCompleteProject && userProject ? (
+                            <Button
+                              size="sm"
+                              variant={isFocus ? 'default' : 'secondary'}
+                              disabled={completingProjectId === userProject.id}
+                              onClick={() => onCompleteProject(userProject.id)}
+                            >
+                              {completingProjectId === userProject.id ? 'Salvando...' : 'Marcar como concluído'}
+                            </Button>
+                          ) : onStartProject ? (
                             <Button
                               size="sm"
                               variant={isFocus ? 'default' : 'secondary'}
@@ -434,7 +508,7 @@ export function TechnologyStudyPlan({
           variant="ghost"
           size="sm"
           onClick={goNext}
-          disabled={activeIndex === STAGES.length - 1}
+          disabled={activeIndex === STAGES.length - 1 || nextLocked}
         >
           Próxima
           <ChevronRight className="h-4 w-4" />
