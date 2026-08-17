@@ -51,10 +51,11 @@ services:
       - key: LOG_LEVEL
         value: info
 
-  # Mantém type: static — o Render não permite mudar o tipo de um serviço já criado.
-  # Publish em dist + rewrite SPA para o React Router (evita tela branca / 404 em /assets).
-  - type: static
+  # Static site no formato do Blueprint: type web + runtime static.
+  # (type: static não existe na spec; runtime: node mudaria o tipo do serviço já criado.)
+  - type: web
     name: devpath-alysonlucn-web
+    runtime: static
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
