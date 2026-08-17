@@ -44,6 +44,8 @@ services:
         value: groq
       - key: GROQ_MODEL
         value: openai/gpt-oss-120b
+      # sync: false = o Blueprint não envia o valor. Cole a chave no dashboard
+      # do serviço da API (Environment → GROQ_API_KEY), senão a IA cai no mock (nota 78).
       - key: GROQ_API_KEY
         sync: false
       - key: SEED_DATABASE

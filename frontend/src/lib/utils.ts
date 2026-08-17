@@ -58,6 +58,8 @@ const apiMessageTranslations: Record<string, string> = {
   'O modelo de IA configurado não está mais disponível.': 'O modelo de IA configurado não está mais disponível.',
   'A chave da IA é inválida ou está sem permissão.': 'A chave da IA é inválida ou está sem permissão.',
   'A IA está temporariamente sobrecarregada. Tente novamente em instantes.': 'A IA está temporariamente sobrecarregada. Tente novamente em instantes.',
+  'A IA não está configurada neste servidor. Defina GROQ_API_KEY no ambiente da API.':
+    'A IA não está configurada neste servidor. Defina GROQ_API_KEY no ambiente da API.',
 }
 
 function translateApiMessage(message: string): string {

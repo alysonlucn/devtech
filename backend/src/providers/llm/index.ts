@@ -3,10 +3,19 @@ import { LLMProvider } from '../../interfaces/llm/llm-provider.interface';
 import { logger } from '../../utils/logger';
 import { OpenAICompatibleProvider } from './openai.provider';
 import { MockLLMProvider } from './mock.provider';
+import { UnconfiguredLLMProvider } from './unconfigured.provider';
 
 const GROQ_BASE_URL = 'https://api.groq.com/openai/v1';
 
 export const DEFAULT_GROQ_MODEL = 'openai/gpt-oss-120b';
+
+export type LLMProviderName = 'groq' | 'openai' | 'mock' | 'unconfigured';
+
+let activeProviderName: LLMProviderName = 'unconfigured';
+
+export function getActiveLLMProviderName(): LLMProviderName {
+  return activeProviderName;
+}
 
 /** Groq retirou estes IDs; pedidos a eles passam a usar o substituto oficial. */
 const DEPRECATED_GROQ_MODELS: Record<string, string> = {
@@ -32,6 +41,7 @@ export function createLLMProvider(): LLMProvider {
       logger.warn(`Modelo Groq "${env.GROQ_MODEL}" foi descontinuado. Usando ${model}.`);
     }
     logger.info(`LLM provider: Groq (${model})`);
+    activeProviderName = 'groq';
     return new OpenAICompatibleProvider({
       apiKey: env.GROQ_API_KEY,
       baseURL: GROQ_BASE_URL,
@@ -41,12 +51,22 @@ export function createLLMProvider(): LLMProvider {
 
   if (env.LLM_PROVIDER === 'openai' && env.OPENAI_API_KEY) {
     logger.info(`LLM provider: OpenAI (${env.OPENAI_MODEL})`);
+    activeProviderName = 'openai';
     return new OpenAICompatibleProvider({
       apiKey: env.OPENAI_API_KEY,
       model: env.OPENAI_MODEL,
     });
   }
 
+  if (env.LLM_PROVIDER !== 'mock' && env.NODE_ENV === 'production') {
+    logger.error(
+      `LLM_PROVIDER=${env.LLM_PROVIDER}, mas a chave da API não está definida. Defina GROQ_API_KEY no ambiente.`,
+    );
+    activeProviderName = 'unconfigured';
+    return new UnconfiguredLLMProvider();
+  }
+
   logger.info('LLM provider: Mock (no API key configured)');
+  activeProviderName = 'mock';
   return new MockLLMProvider();
 }
